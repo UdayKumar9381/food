@@ -12,14 +12,16 @@ const SPREADSHEET_ID = "1xzJ_GRoB-EiEcULuUd9KslUhBet5XkCYZvQAtTey9Jc";
 // CORS Configuration
 app.use(cors({
   origin: [
-    "https://food-sigma-rosy.vercel.app/",
+    "https://food-sigma-rosy.vercel.app",
+    "https://food-amber-tau.vercel.app",
     "http://localhost:5173",
     "http://localhost:3000",
-    "http://localhost:8002",
-    "http://127.0.0.1:8080",
   ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
+
 
 app.use(express.json());
 
