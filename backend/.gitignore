@@ -1,0 +1,2 @@
+echo ".env" >> .gitignore
+echo "config/kbhfoodreport-ae688541f8a0*.json" >> .gitignore
