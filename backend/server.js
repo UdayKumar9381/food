@@ -12,7 +12,7 @@ const SPREADSHEET_ID = "1xzJ_GRoB-EiEcULuUd9KslUhBet5XkCYZvQAtTey9Jc";
 // CORS Configuration
 app.use(cors({
   origin: [
-    "https://hostel-fees-insight.vercel.app",
+    "https://food-amber-tau.vercel.app/",
     "http://localhost:5173",
     "http://localhost:3000",
     "http://localhost:8002",
