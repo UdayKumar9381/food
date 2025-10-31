@@ -6,25 +6,18 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 8002;
 const SPREADSHEET_ID = "1xzJ_GRoB-EiEcULuUd9KslUhBet5XkCYZvQAtTey9Jc";
 
 // CORS Configuration
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:8080",
-  "https://hostel-fees-insight.vercel.app"
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn("❌ Blocked by CORS:", origin);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: [
+    "https://hostel-fees-insight.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8080",
+  ],
   credentials: true,
 }));
 
@@ -53,46 +46,54 @@ async function initializeAuth() {
   try {
     console.log("🔐 Initializing Google Sheets authentication...");
 
-    // Try environment variable first
+    let credentialsJson;
+
+    // Try environment variable first (for production/Render)
     if (process.env.GOOGLE_CREDENTIALS) {
       console.log("🔍 Loading credentials from environment variable...");
-      const credentialsJson = JSON.parse(process.env.GOOGLE_CREDENTIALS);
       
-      const auth = new google.auth.GoogleAuth({
-        credentials: credentialsJson,
-        scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-      });
-
-      credentials = credentialsJson;
-      const authClient = await auth.getClient();
-      sheetsAPI = google.sheets({ version: "v4", auth: authClient });
+      const rawCreds = process.env.GOOGLE_CREDENTIALS.trim();
+      
+      // Check if it's base64 encoded
+      if (!rawCreds.startsWith("{")) {
+        console.log("📦 Decoding base64 credentials...");
+        const decoded = Buffer.from(rawCreds, "base64").toString("utf8");
+        credentialsJson = JSON.parse(decoded);
+      } else {
+        // Direct JSON string
+        credentialsJson = JSON.parse(rawCreds);
+      }
+      
       console.log("✅ Loaded credentials from environment variable");
     } else {
-      // Load from file
-      console.log("🔍 Loading credentials from file...");
-      const credentialsPath = path.join(__dirname, "config", "kbhfoodreport-ae688541f8a0.json");
-      const keyFilePath = path.resolve(credentialsPath);
+      // Load from file (for local development only)
+      console.log("🔍 Loading credentials from local file...");
+      const keyFilePath = path.join(__dirname, "config", "kbhfoodreport-e12d936c4fce.json");
       
       if (!fs.existsSync(keyFilePath)) {
-        throw new Error(`Credentials file not found at: ${keyFilePath}`);
+        throw new Error(
+          `Credentials file not found at: ${keyFilePath}\n` +
+          `For production, set GOOGLE_CREDENTIALS environment variable.`
+        );
       }
 
-      const credentialsJson = JSON.parse(fs.readFileSync(keyFilePath, "utf8"));
-      
-      const auth = new google.auth.GoogleAuth({
-        credentials: credentialsJson,
-        scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-      });
-
-      credentials = credentialsJson;
-      const authClient = await auth.getClient();
-      sheetsAPI = google.sheets({ version: "v4", auth: authClient });
+      credentialsJson = JSON.parse(fs.readFileSync(keyFilePath, "utf8"));
       console.log("✅ Loaded credentials from file (local)");
     }
 
-    if (!credentials) {
+    if (!credentialsJson) {
       throw new Error("Failed to load credentials");
     }
+
+    // Create auth client
+    const auth = new google.auth.GoogleAuth({
+      credentials: credentialsJson,
+      scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    });
+
+    credentials = credentialsJson;
+    const authClient = await auth.getClient();
+    sheetsAPI = google.sheets({ version: "v4", auth: authClient });
 
     console.log(`📧 Service account: ${credentials.client_email}`);
     console.log("✅ Google Sheets API initialized successfully");
@@ -100,6 +101,9 @@ async function initializeAuth() {
     return sheetsAPI;
   } catch (error) {
     console.error("❌ Failed to load credentials:", error.message);
+    console.error("\n💡 Troubleshooting:");
+    console.error("   - For local: Ensure config/kbhfoodreport-e12d936c4fce.json exists");
+    console.error("   - For Render: Set GOOGLE_CREDENTIALS environment variable");
     throw error;
   }
 }
