@@ -1,7 +1,7 @@
 import axios from "axios";
 
 /* ============ Configuration ============ */
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5173";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://food-fee.onrender.com";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
