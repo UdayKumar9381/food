@@ -360,8 +360,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername]([https://github.com/UdayKumar9381/])
-- LinkedIn: [Your Profile](https://linkedin.com/in/narapureddi-uday-kumar-523551262)
+- GitHub: https://github.com/UdayKumar9381/
+- LinkedIn:https://linkedin.com/in/narapureddi-uday-kumar-523551262
 
 ## 🙏 Acknowledgments
 
@@ -372,9 +372,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Support
 
-For support, email your.email@example.com or open an issue on GitHub.
+For support, email udayreddi28@gmail.com or open an issue on GitHub.
 
 ---
 
 **⭐ Star this repo if you find it helpful!**
+
 
