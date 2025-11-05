@@ -26,7 +26,8 @@ A comprehensive hostel fee management system that provides real-time insights in
 
 ## 📸 Screenshots
 
-![Dashboard Screenshot]()
+<img width="1920" height="2305" alt="screencapture-food-sigma-rosy-vercel-app-2025-11-04-18_16_23" src="https://github.com/user-attachments/assets/2c8a9c21-93b8-4d08-8b35-5ff0e35524d8" />
+
 *Main dashboard showing payment statistics*
 
 ## 🛠️ Tech Stack
@@ -377,5 +378,6 @@ For support, email udayreddi28@gmail.com or open an issue on GitHub.
 ---
 
 **⭐ Star this repo if you find it helpful!**
+
 
 
